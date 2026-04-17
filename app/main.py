@@ -17,6 +17,7 @@ DB 접근:
   아래 include_router 예시처럼 등록하세요.
 ─────────────────────────────────────────────────────────────
 """
+import os
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -74,6 +75,15 @@ async def health(db: AsyncSession = Depends(get_db)):
 @app.get("/")
 async def root():
     return {"message": "Hello from Academy API!"}
+
+
+# ── 프론트용 공개 설정 (지도 API 키 등 — 브라우저에 노출되는 값만) ──
+@app.get("/config")
+async def public_config():
+    return {
+        "naverMapsClientId": os.getenv("NAVER_MAPS_CLIENT_ID", ""),
+        "kakaoMapsAppKey":   os.getenv("KAKAO_MAPS_APP_KEY",   ""),
+    }
 
 
 # ── 예시 CRUD (items 테이블) ───────────────────────────────────
